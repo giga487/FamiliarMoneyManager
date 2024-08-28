@@ -5,6 +5,10 @@ VisualStudioVersion = 17.10.34916.146
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyMoneyWebApp", "FamilyMoneyWebApp.csproj", "{54E7DC49-1508-442B-B7EA-94124B1EBF36}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataDBAccess", "..\DataDBAccess\DataDBAccess.csproj", "{36C431AD-0EF6-4977-804C-0F81992E309C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBTests", "..\DBTests\DBTests.csproj", "{9DD1A452-1C69-4126-B2CE-80DCD52B73C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{54E7DC49-1508-442B-B7EA-94124B1EBF36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54E7DC49-1508-442B-B7EA-94124B1EBF36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54E7DC49-1508-442B-B7EA-94124B1EBF36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36C431AD-0EF6-4977-804C-0F81992E309C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36C431AD-0EF6-4977-804C-0F81992E309C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36C431AD-0EF6-4977-804C-0F81992E309C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36C431AD-0EF6-4977-804C-0F81992E309C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DD1A452-1C69-4126-B2CE-80DCD52B73C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DD1A452-1C69-4126-B2CE-80DCD52B73C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DD1A452-1C69-4126-B2CE-80DCD52B73C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DD1A452-1C69-4126-B2CE-80DCD52B73C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
