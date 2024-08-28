@@ -14,8 +14,6 @@ namespace FamilyMoneyWebApp.src
     {
         int UserId { get; }
         string UserName { get; }
-        string Password { get; }
-        DateTime CreationTime { get; }
     }
 
 }

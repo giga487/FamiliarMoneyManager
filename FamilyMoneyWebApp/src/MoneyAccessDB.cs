@@ -22,6 +22,11 @@ namespace FamilyMoneyWebApp.src
             string groupNameString = string.Empty;
             _groupNameTable = groupNameTable;
 
+            if (TableExist(groupNameTable))
+            {
+                return DBResult.CreateTableAlreadyExixt;
+            }
+
             for (int i = 0; i < MaxUserGroupNumber; i++)
             {
                 groupNameString += $", user_id{i} int";
@@ -49,6 +54,12 @@ namespace FamilyMoneyWebApp.src
         public DBResult CreateUsersTable(string tableName)
         {
             _usersNameTable = tableName;
+
+            if (TableExist(tableName))
+            {
+                return DBResult.CreateTableAlreadyExixt;
+            }
+
             string sql = $"Create Table [{_usersNameTable}] ({_userIdField} int, name varchar(40), password varchar(40), creation DATETIME)";
 
             try
@@ -69,25 +80,74 @@ namespace FamilyMoneyWebApp.src
 
             return DBResult.Success;
         }
-        public void AddUser(IAccount account)
-        {
-            if (account is null || !(account is LoginAccount acc))
-                return;
 
-            _logger?.Information($"Add {account.UserName} user");
-            string cmdCreateSecret = $"INSERT INTO {_usersNameTable} ({_userIdField}, name, password, creation) VALUES (@{_userIdField}, @name, @password, @datetime)";
+
+        public void AddGroup(string groupName, List<int> userIds)
+        {
+            string groupNameString = string.Empty;
+            string groupNameStringValue = string.Empty;
+
+            for (int i = 0; i < MaxUserGroupNumber; i++)
+            {
+                groupNameString += $", user_id{i}";
+                groupNameStringValue += $", @user_id{i}";
+            }
+
+            _logger?.Information($"Group Creation {groupName}");
+            string cmdCreateSecret = $"INSERT INTO {_groupNameTable} (name {groupNameString}) VALUES (@name {groupNameStringValue})";
 
             int userId = GetNewUserId();
 
             using (SQLiteCommand command = new SQLiteCommand(cmdCreateSecret, _con))
             {
-                command.Parameters.AddWithValue($"@{_userIdField}", userId);
-                command.Parameters.AddWithValue("@name", account.UserName);
-                command.Parameters.AddWithValue("@password", account.Password);
-                command.Parameters.AddWithValue("@datetime", account.CreationTime);
+                command.Parameters.AddWithValue("@name", groupName);
+
+                for(int i = 0; i < MaxUserGroupNumber; i++)// (int id in userIds)
+                {
+                    try
+                    {
+                        command.Parameters.AddWithValue($"@user_id{i}", userIds[i]);
+                    }
+                    catch
+                    {
+                        command.Parameters.AddWithValue($"@user_id{i}", string.Empty);
+                    }
+                }
+
                 int result = command.ExecuteNonQuery();
             }
         }
+
+        public DBResult AddUser(IAccount account, ref int userId)
+        {
+            if (account is null || !(account is LoginAccount acc))
+                return DBResult.CreateUserFail;
+
+            _logger?.Information($"Add {account.UserName} user");
+            string cmdCreateSecret = $"INSERT INTO {_usersNameTable} ({_userIdField}, name, password, creation) VALUES (@{_userIdField}, @name, @password, @datetime)";
+
+            try
+            {
+                userId = GetNewUserId();
+
+                using (SQLiteCommand command = new SQLiteCommand(cmdCreateSecret, _con))
+                {
+                    command.Parameters.AddWithValue($"@{_userIdField}", userId);
+                    command.Parameters.AddWithValue("@name", acc.UserName);
+                    command.Parameters.AddWithValue("@password", acc.Password);
+                    command.Parameters.AddWithValue("@datetime", acc.CreationTime);
+                    int result = command.ExecuteNonQuery();
+                }
+
+                return DBResult.Success;
+            }
+            catch
+            {
+                return DBResult.CreateUserFail;
+            }
+        }
+
+
 
         public List<IAccount> GetUsers()
         {

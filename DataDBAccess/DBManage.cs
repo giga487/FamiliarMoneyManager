@@ -9,10 +9,13 @@ namespace DataDBAccess
         ConnectionFail,
         GroupCreationOK,
         GroupCreationFail,
+        CreateTableAlreadyExixt,
         CreateTableGroupOK,
         CreateTableGroupFail,
         CreateTableUsersOK,
         CreateTableUsersFail,
+        CreateUserFail,
+        CreateUserOk
 
     }
 
@@ -46,7 +49,7 @@ namespace DataDBAccess
             }
 
         }
-        private bool TableExist(string tableName)
+        protected bool TableExist(string tableName)
         {
             string exist = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}';";
 
