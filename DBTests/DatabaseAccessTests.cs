@@ -36,6 +36,10 @@ namespace DBTests
                 test.AddUser(acc, ref id);
             }
 
+            var account = test.GetAccount(id);
+
+            Console.WriteLine($"Test GetAccount({id}) =>  {account.UserName}");
+
             var users = test.GetUsers();
 
             foreach (IAccount usersAcc in users)
@@ -70,6 +74,14 @@ namespace DBTests
             }
 
             test.AddGroup("TEST_GROUP", userIds);
+
+            var groupInfo = test.GetGroupInfo("TEST_GROUP");
+
+            foreach (int id in groupInfo.UserIds)
+            {
+                var account = test.GetAccount(id);
+                Console.WriteLine($"{groupInfo.GrouName}: {account.UserId} {account.UserName}");
+            }
         }
     }
 }

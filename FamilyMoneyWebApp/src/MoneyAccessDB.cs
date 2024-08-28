@@ -110,7 +110,7 @@ namespace FamilyMoneyWebApp.src
                     }
                     catch
                     {
-                        command.Parameters.AddWithValue($"@user_id{i}", string.Empty);
+                        command.Parameters.AddWithValue($"@user_id{i}", -1);
                     }
                 }
 
@@ -147,7 +147,80 @@ namespace FamilyMoneyWebApp.src
             }
         }
 
+        public MoneyGroup GetGroupInfo(string groupName)
+        {
+            MoneyGroup groupInfo = new MoneyGroup();
 
+            string cmdCreateSecret = $"SELECT * FROM {_groupNameTable}";
+
+            using (SQLiteCommand command = new SQLiteCommand(cmdCreateSecret, _con))
+            {
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+
+                        while (reader.Read())
+                        {
+                            if (reader[0] is string name)
+                            {
+                                groupInfo.GrouName = name;
+                            }
+
+                            for (int i = 0; i < MaxUserGroupNumber; i++)
+                            {
+                                if (reader[i] is int && ((int)reader[i] != -1))
+                                {
+                                    groupInfo.UserIds.Add((int)reader[i]);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        _logger.Warning("No rows found.");
+                    }
+                }
+            }
+
+            return groupInfo;
+
+        }
+
+        public IAccount GetAccount(int userId)
+        {
+            string cmdCreateSecret = $"SELECT * FROM {_usersNameTable} WHERE {_userIdField}=@userid";
+            LoginAccount account = null;
+
+            using (SQLiteCommand command = new SQLiteCommand(cmdCreateSecret, _con))
+            {
+                command.Parameters.AddWithValue("@userid", userId);
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            account = new LoginAccount();
+
+                            if (reader[0] is int userID)
+                            {
+                                account.UserId = (int)userID;
+                            }
+
+                            if (reader[1] is string userName)
+                            {
+                                account.UserName = (string)userName;
+                            }
+
+                        }
+                    }
+                }
+
+            }
+
+            return account;
+        }
 
         public List<IAccount> GetUsers()
         {
@@ -188,7 +261,7 @@ namespace FamilyMoneyWebApp.src
                     }
                     else
                     {
-                        Console.WriteLine("No rows found.");
+                        _logger.Information("No rows found.");
                     }
                 }
             }
