@@ -4,10 +4,15 @@ namespace DataDBAccess
 {
     public enum DBResult
     {
+        Success,
         ConnectionOK,
         ConnectionFail,
         GroupCreationOK,
         GroupCreationFail,
+        CreateTableGroupOK,
+        CreateTableGroupFail,
+        CreateTableUsersOK,
+        CreateTableUsersFail,
 
     }
 
